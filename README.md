@@ -1,15 +1,15 @@
 
 
-# K8 Terraform Kubeadm
+# K8 cluster with Kubeadm
 
-> This repo .    
+> This repo creates a K8 cluster.    
 
 ## Usage 
 ### Get Yandex VPS images list
 ```bash
 yc compute image list --folder-id standard-images | grep debian
 ```
-Copy id from the ID column starting with fd...  
+Copy id from the ID column starting with `fd`.    
 
 ### Get Yandex VPS image info
 ```bash
@@ -20,7 +20,7 @@ Create user and its RSA key records in main.auto.tfvars.
 Add main.auto.tfvars in the .gitignore file.  
 Create main.auto.tfvars.sample to instruct others about types of sensitive data.
 See main.auto.tfvars.sample for details.  
-Describe your records as vars in the variable.tf (look inside this file for details).
+Describe your records as vars in the variable.tf (look inside this file for details).  
 Use your vars in the `metadata` section of "yandex_compute_instance" resource (see main.tf):
 ```bash
 metadata = {
@@ -74,22 +74,22 @@ or change to your own.
 ### Kubernetes 
 When creating K8 cluster with kubeadm I have defined these stages:
 1. Installing docker.io, kubelet, and kubeadm on both master and worker nodes.  
-    - see Ansible common role for details;  
+    - see Ansible `common` role for details;  
 2. Installing kubectl on a master node.  
-    - see Ansible master role for details;  
+    - see Ansible `master` role for details;  
 3. Initializing the cluster on the master node.  
-    - see Ansible master role for details;  
+    - see Ansible `master` role for details;  
     - flannel docs [says](https://github.com/flannel-io/flannel/blob/master/Documentation/kubernetes.md) there should be --pod-network-cidr parameter added to init command;  
 4. Copying a cluster config file to the user home dir on master node.  
-    - see Ansible master role for details;  
+    - see Ansible `master` role for details;  
     - you won't be able to run kubectl commands without copying cluster config file;
     - you will see `The connection to the server localhost:8080 was refused` error;  
 5. Installing a pod network (flannel) on the master node.
-    - see Ansible master role for details;
+    - see Ansible `master` role for details;
     - I guess this is a sort of L3 SDN for K8 cluster;
 6. Generating credentials for connecting worker nodes to the cluster on the master node.
-    - see Ansible join_master role for details;
-    - credentials are copied to a variable and then the first line of this object variable is printed and stored to a j2 template file;
+    - see Ansible `join_master` role for details;
+    - credentials are copied to a variable and then the first line of this object variable is printed and stored to a j2 template file (added to .gitignore);  
 7. Applying credentials to worker nodes.
     - j2 template is copied as a .txt file to a worker node, and run when being echoed. 
 8. Monitoring installation results.
@@ -103,7 +103,7 @@ When creating K8 cluster with kubeadm I have defined these stages:
     master   Ready    control-plane,master   7h11m   v1.21.1
     worker   Ready    <none>                 7h9m    v1.21.1
     ```
-    - as Yandex.Cloud VPSes, both master and worker, have got only private ip eth interfaces that are used by a K8 cluster, so the third VPS serving as openvpn server is created to allow your local PC become a part of this private subnet and run K8 Dashboard.
+    - as Yandex.Cloud VPSes, both master and worker, have got only private ip eth interface that are used by a K8 cluster, so the third VPS serving as openvpn server is created to allow your local PC become a part of this private subnet and run K8 Dashboard.
     - openvpn server was created [manually](https://cloud.yandex.ru/docs/solutions/routing/openvpn).   
     - you can log in, but you won't see anything in Dashboard using existing K8 cluster tokens obtained by one of these commands:
     ```bash
