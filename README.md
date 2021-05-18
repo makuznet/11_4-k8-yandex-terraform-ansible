@@ -182,6 +182,7 @@ This repo was inspired by [skillfactory.ru](https://skillfactory.ru/devops#sylla
 - [openvpn client for MacOS](https://openvpn.net/vpn-server-resources/connecting-to-access-server-with-macos/)
 - [Kubernetes Dashboard docs](https://github.com/kubernetes/dashboard/tree/master/docs)
 - [Kubernetes Dashboard docs Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
+- [Not enough data to create auth info structure](https://stackoverflow.com/questions/48228534/kubernetes-dashboard-access-using-config-file-not-enough-data-to-create-auth-inf)
 
 
 ## License
