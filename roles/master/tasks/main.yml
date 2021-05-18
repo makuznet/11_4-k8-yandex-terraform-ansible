@@ -1,0 +1,41 @@
+---
+- name: install kubectl
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - kubectl=1.21.1-00
+
+- name: initialize the cluster
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+  args:
+    chdir: /home/{{ ansible_user }}
+    creates: cluster_initialized.txt
+  run_once: true
+
+- name: create .kube directory
+  file:
+    path: /home/{{ ansible_user }}/.kube
+    state: directory
+    mode: '0755'
+
+- name: copy admin.conf to user's kube config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/{{ ansible_user }}/.kube/config/admin.conf
+    remote_src: true
+    owner: "{{ ansible_user }}"
+  
+- name: copy admin.conf to my Mac
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: /Users/makuznet/.kube/config/admin.conf
+    remote_src: true
+    flat: yes
+
+- name: install Pod network
+  shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
+  args:
+    chdir: /home/{{ ansible_user }}
+    creates: pod_network_setup.txt
+  become: false  

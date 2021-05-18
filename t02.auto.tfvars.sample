@@ -1,0 +1,5 @@
+ytoken = "yandex.cloud token"
+ycloud = "yandex cloud id"
+yfolder = "yandex.cloud folder id"
+login_user = "your user"
+my_ssh_key = "ssh-rsa key for your user"

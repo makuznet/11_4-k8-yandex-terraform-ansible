@@ -1,0 +1,11 @@
+---
+- name: get join command
+  shell: kubeadm token create --print-join-command
+  register: join_command_raw
+
+- name: save join command in the template
+  become: false
+  local_action:
+    module: copy
+    content: "{{ join_command_raw.stdout_lines[0] }}"
+    dest: roles/join_worker/templates/join.j2

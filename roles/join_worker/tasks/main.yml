@@ -1,0 +1,16 @@
+---
+- name: send join file to worker
+  template:
+    src: "{{ item.src_file }}"
+    dest: "{{ item.dest_file }}"
+  loop:
+    - {
+      src_file: "join.j2",
+      dest_file: "/home/{{ ansible_user }}/join.txt"
+    }
+
+- name: worker joins cluster
+  shell: cat join.txt | bash
+  register: output
+  args:
+    chdir: /home/{{ ansible_user }}
