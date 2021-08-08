@@ -8,4 +8,4 @@
   local_action:
     module: copy
     content: "{{ join_command_raw.stdout_lines[0] }}"
-    dest: roles/join_worker/templates/join.j2
+    dest: playbooks/roles/join_worker/templates/join.j2

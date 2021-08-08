@@ -94,7 +94,7 @@ output "internal_ip_address" {
 resource "null_resource" "ansible" {
 
   provisioner "local-exec" {
-    command = "ansible-playbook -i inventory.yml main.yml"
+    command = "cd ..; ansible-playbook -i terraform-ya/inventory.yml playbooks/main.yml"
   }
 
   depends_on = [local_file.inventory, null_resource.known_hosts]
